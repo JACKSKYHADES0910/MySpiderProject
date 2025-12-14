@@ -16,7 +16,7 @@
 ---
 
 ### 🚀 快速导航 (Quick Links)
-[快速开始 (Quick Start)](#-快速开始-quick-start) | [使用说明 (Usage)](#-使用说明-usage) | [支持学校 (Supported Universities)](#-支持学校矩阵-supported-universities) | [配置 (Configuration)](#-配置说明-configuration) | [输出 Schema](#-输出说明--data-schema-output) | [常见问题 (FAQ)](#-常见问题-faq--troubleshooting)
+[快速开始](#-快速开始-quick-start) | [使用说明](#-使用说明-usage) | [支持学校](#-支持学校矩阵-supported-universities) | [配置](#-配置说明-configuration) | [输出 Schema](#-输出说明--data-schema-output) | [常见问题](#-常见问题-faq--troubleshooting)
 
 ---
 
@@ -25,29 +25,26 @@
 <details>
 <summary>👉 点击展开目录 (Click to expand)</summary>
 
-1. [项目亮点 (Highlights)](#-项目亮点-highlights)
-2. [支持学校矩阵 (Supported Universities)](#-支持学校矩阵-supported-universities)
-3. [快速开始 (Quick Start)](#-快速开始-quick-start)
-4. [安装 (Installation)](#-安装-installation)
-5. [使用说明 (Usage)](#-使用说明-usage)
-6. [配置说明 (Configuration)](#-配置说明-configuration)
-7. [输出说明 & Data Schema (Output)](#-输出说明--data-schema-output)
-8. [项目结构 (Project Structure)](#-项目结构-project-structure)
-9. [工作原理 (How it works)](#-工作原理-how-it-works)
-10. [扩展新学校 (Add a New Spider)](#-扩展新学校-add-a-new-spider)
-11. [常见问题 (FAQ / Troubleshooting)](#-常见问题-faq--troubleshooting)
-12. [适合谁 (Who is this for)](#-适合谁-who-is-this-for)
-13. [路线图 (Roadmap)](#-路线图-roadmap)
-14. [贡献 (Contributing)](#-贡献-contributing)
-15. [版本控制 (Versioning)](#-版本控制-versioning)
-16. [合法合规与免责声明 (Legal & Disclaimer)](#-合法合规与免责声明-legal--disclaimer)
-17. [License](#-license)
+1. [项目技术](#-项目技术-project-technology)
+2. [支持学校矩阵](#-支持学校矩阵-supported-universities)
+3. [快速开始](#-快速开始-quick-start)
+4. [安装](#-安装-installation)
+5. [使用说明](#-使用说明-usage)
+6. [配置说明](#-配置说明-configuration)
+7. [输出说明 & Data Schema](#-输出说明--data-schema-output)
+8. [项目结构](#-项目结构-project-structure)
+9. [工作原理](#-工作原理-how-it-works)
+10. [扩展新学校](#-扩展新学校-add-a-new-spider)
+11. [常见问题](#-常见问题-faq--troubleshooting)
+12. [适合谁](#-适合谁-who-is-this-for)
+13. [合法合规与免责声明](#-合法合规与免责声明-legal--disclaimer)
+14. [License](#-license)
 
 </details>
 
 ---
 
-## ✨ 项目亮点 (Highlights)
+## ✨ 项目技术 (Project Technology)
 
 *   **浏览器池并发 (Browser Pool)**: 内置自定义 `BrowserPool`，复用 Selenium WebDriver 实例，支持多线程高并发抓取详细页（需机器性能支持），大幅提升抓取效率。
 *   **双模式运行**:
@@ -297,37 +294,10 @@ A: 网络波动或页面加载过慢。尝试在 `config.py` 中增加 `TIMEOUT`
 
 *   **留学生 / 申请人**: 告别手动 Excel 整理，一键获取最新的 Program List 和 DDl，高效管理申请时间线。
 *   **Python 初学者**: 学习一个结构完整、包含 **并发 (Concurrency)**、**浏览器自动化 (Selenium)** 和 **数据管道** 的真实爬虫项目。
-*   **招聘方 / 面试官**: 查看标准化的 Python 工程结构、代码规范以及对反爬、去重、异常处理的思考。
 
 ---
 
-## 🗺️ 路线图 (Roadmap)
-
-- [x] **v1.0 Basic**: 支持 HKU, CUHK 核心字段抓取与 Excel 导出
-- [x] **v1.1 Robustness**: 加入 BrowserPool 與 重试机制
-- [ ] **v1.2 Coverage**: 增加 HKBU, HKUST 支持
-- [ ] **v2.0 UK Region**: 支持英国学校 (KCL, UCL, Manchester)
-- [ ] **v3.0 DB Integration**: 支持 SQLite/MySQL 持久化存储
-- [ ] **v4.0 Web UI**: 提供 Streamlit/Flask 可视化操作界面
-
----
-
-## 🤝 贡献 (Contributing)
-
-我们非常欢迎 PR！贡献流程如下：
-
-1.  **Fork** 本项目
-2.  创建 Feature 分支 (`git checkout -b feature/AmazingFeature`)
-3.  提交修改 (`git commit -m 'Add some AmazingFeature'`)
-4.  推送到分支 (`git push origin feature/AmazingFeature`)
-5.  提交 **Pull Request**
-
----
-
-## 📜 版本控制 (Versioning)
-
-本项目遵循 [Semantic Versioning 2.0.0](https://semver.org/) 语义化版本规范。
-当前版本：**v1.0.0**
+<!-- Sections Removed: Roadmap, Contributing, Versioning -->
 
 ---
 
