@@ -42,92 +42,96 @@ class PolyUSpider(BaseSpider):
         
         results = []
         
-        # 查找所有项目行
-        # 根据提供的HTML，项目在 .views-row 类中
-        # 我们可以定位 .programmes-items 下的直接子元素或 .views-row
-        container = soup.select_one(".programmes-items")
-        if not container:
-            print("⚠️ 未找到 .programmes-items 容器")
-            return []
-            
-        items = container.select(".views-row")
-        print(f"📦 发现 {len(items)} 个潜在项目条目")
+        # 查找所有学院区块 (programmes-row)
+        # 每个学院都有自己的 programmes-row > programmes-items > views-row 结构
+        faculty_blocks = soup.select(".programmes-row")
+        print(f"📦 发现 {len(faculty_blocks)} 个学院区块")
         
-        for item in items:
-            try:
-                # 提取链接元素
-                link_el = item.select_one("a.programme")
-                if not link_el:
-                    continue
-                    
-                href = link_el.get("href")
-                if not href:
-                    continue
-                    
-                # 处理相对链接
-                full_link = href
-                if href.startswith("/"):
-                    full_link = "https://www.polyu.edu.hk" + href
-                elif not href.startswith("http"):
-                    # 还有可能是相对路径但没有斜杠，视情况而定，PolyU通常是以/开头
-                    full_link = "https://www.polyu.edu.hk/" + href
-                
-                # 提取标题
-                title_el = item.select_one(".title")
-                title = title_el.get_text(strip=True) if title_el else ""
-                
-                # 提取副标题 (中文名)
-                subtitle_el = item.select_one(".subtitle")
-                subtitle = subtitle_el.get_text(strip=True) if subtitle_el else ""
-                
-                # 组合名称，方便识别
-                full_name = f"{title} {subtitle}".strip()
-                
-                # 提取截止日期
-                deadline = "N/A"
-                deadline_el = item.select_one(".deadline-section")
-                if deadline_el:
-                    # 优先查找 Non-Local
-                    non_local_div = deadline_el.find("div", string=lambda t: t and "Non-Local" in t)
-                    if non_local_div:
-                        raw_dl = non_local_div.get_text(strip=True)
-                        # 格式: "Non-Local Application Deadline: 15 Jan 2026 (Main Round)"
-                        # 提取冒号后的部分
-                        if ":" in raw_dl:
-                            deadline = raw_dl.split(":", 1)[1].strip()
-                        else:
-                            deadline = raw_dl
-                    else:
-                        # 如果没有 Non-Local，尝试 Local
-                        local_div = deadline_el.find("div", string=lambda t: t and "Local" in t)
-                        if local_div:
-                             raw_dl = local_div.get_text(strip=True)
-                             if ":" in raw_dl:
-                                deadline = raw_dl.split(":", 1)[1].strip()
-                             else:
-                                deadline = raw_dl
-                
-                program_data = {
-                    "program_name": title,  # 保持原始英文名作为主键
-                    "program_name_cn": subtitle,
-                    "link": full_link,
-                    "deadline": deadline,
-                    "application_link": self.apply_url,
-                    "university": "PolyU",
-                    "country": "Hong Kong"
-                }
-                
-                results.append(program_data)
-                
-            except Exception as e:
-                print(f"⚠️ 解析条目出错: {e}")
+        for faculty_idx, faculty_block in enumerate(faculty_blocks):
+            # 获取学院名称（可选，用于调试）
+            faculty_title_el = faculty_block.select_one(".faculty-title")
+            faculty_name = faculty_title_el.get_text(strip=True) if faculty_title_el else f"Faculty {faculty_idx+1}"
+            
+            # 在该学院下查找 programmes-items 容器
+            items_container = faculty_block.select_one(".programmes-items")
+            if not items_container:
                 continue
                 
-        # 过滤博士项目
-        filtered_results = self.filter_doctor_programmes(results)
-        
-        print(f"✅ 抓取完成，原始数量: {len(results)}，过滤后数量: {len(filtered_results)}")
-        return filtered_results
+            # 在该容器下查找所有项目行
+            items = items_container.select(".views-row")
+            print(f"  📚 {faculty_name}: {len(items)} 个项目")
+            
+            for item in items:
+                try:
+                    # 提取链接元素
+                    link_el = item.select_one("a.programme")
+                    if not link_el:
+                        continue
+                        
+                    href = link_el.get("href")
+                    if not href:
+                        continue
+                        
+                    # 处理相对链接
+                    full_link = href
+                    if href.startswith("/"):
+                        full_link = "https://www.polyu.edu.hk" + href
+                    elif not href.startswith("http"):
+                        # 还有可能是相对路径但没有斜杠，视情况而定，PolyU通常是以/开头
+                        full_link = "https://www.polyu.edu.hk/" + href
+                    
+                    # 提取标题
+                    title_el = item.select_one(".title")
+                    title = title_el.get_text(strip=True) if title_el else ""
+                    
+                    # 提取副标题 (中文名)
+                    subtitle_el = item.select_one(".subtitle")
+                    subtitle = subtitle_el.get_text(strip=True) if subtitle_el else ""
+                    
+                    # 组合名称，方便识别
+                    full_name = f"{title} {subtitle}".strip()
+                    
+                    # 提取截止日期
+                    deadline = "N/A"
+                    deadline_el = item.select_one(".deadline-section")
+                    if deadline_el:
+                        # 优先查找 Non-Local
+                        non_local_div = deadline_el.find("div", string=lambda t: t and "Non-Local" in t)
+                        if non_local_div:
+                            raw_dl = non_local_div.get_text(strip=True)
+                            # 格式: "Non-Local Application Deadline: 15 Jan 2026 (Main Round)"
+                            # 提取冒号后的部分
+                            if ":" in raw_dl:
+                                deadline = raw_dl.split(":", 1)[1].strip()
+                            else:
+                                deadline = raw_dl
+                        else:
+                            # 如果没有 Non-Local，尝试 Local
+                            local_div = deadline_el.find("div", string=lambda t: t and "Local" in t)
+                            if local_div:
+                                 raw_dl = local_div.get_text(strip=True)
+                                 if ":" in raw_dl:
+                                    deadline = raw_dl.split(":", 1)[1].strip()
+                                 else:
+                                    deadline = raw_dl
+                    
+                    # 组合中英文项目名称 (官网原始格式)
+                    full_program_name = f"{title} {subtitle}".strip() if subtitle else title
+                    
+                    # 使用 BaseSpider 的标准模板
+                    program_data = self.create_result_template(full_program_name, full_link)
+                    program_data["项目deadline"] = deadline
+                    program_data["项目申请链接"] = self.apply_url
+                    
+                    results.append(program_data)
+                    
+                except Exception as e:
+                    print(f"⚠️ 解析条目出错: {e}")
+                    continue
+                
+        # 领导要求：博士项目也要抓取，不再过滤
+        print(f"✅ 抓取完成，共 {len(results)} 个项目（包含博士项目）")
+        return results
 
     def filter_doctor_programmes(self, items: List[Dict]) -> List[Dict]:
         """
@@ -137,12 +141,13 @@ class PolyUSpider(BaseSpider):
         doctor_keywords = ["Doctor", "PhD", "D.B.A.", "EngD", "Philosophy"]
         
         for item in items:
-            name = item.get("program_name", "")
-            cn_name = item.get("program_name_cn", "")
+            # 使用正确的字段名 (中文)
+            name = item.get("项目名称", "")
+            cn_name = item.get("学生案例", "")  # 中文名存储在这里
             
             is_doctor = False
             for kw in doctor_keywords:
-                if kw in name or kw in cn_name:
+                if kw in name:
                     is_doctor = True
                     break
             
@@ -152,9 +157,8 @@ class PolyUSpider(BaseSpider):
                 
             if not is_doctor:
                 filtered.append(item)
-            else:
-                # print(f"🚫 过滤博士项目: {name}") # 调试用
-                pass
+            # else:
+            #     print(f"🚫 过滤博士项目: {name}")  # 调试用
                 
         return filtered
 
