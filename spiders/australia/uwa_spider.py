@@ -65,53 +65,28 @@ class UWASpider(BaseSpider):
     
     def _get_all_program_links(self) -> List[Tuple[str, str]]:
         """
-        获取所有分页的项目链接
+        获取所有项目链接
+        
+        使用 num_ranks=300 参数一次性获取所有结果，避免分页问题
         
         返回:
             List[Tuple[str, str]]: [(项目名称, 项目URL), ...]
         """
-        all_programs = []
-        page = 1
-        start_rank = 1
+        # 使用 num_ranks 参数一次性获取所有结果
+        full_url = f"{self.list_url}&num_ranks=300"
+        print(f"[-] 使用 num_ranks=300 获取所有结果...", flush=True)
         
-        # 首先访问第一页获取总数
-        self.driver.get(self.list_url)
-        time.sleep(3)
+        self.driver.get(full_url)
+        time.sleep(4)  # 等待较长时间确保所有结果加载
         
         # 获取总结果数
         total_results = self._get_total_results()
         if total_results:
             print(f"[-] 搜索结果总数: {total_results}", flush=True)
         
-        while True:
-            # 构建当前页URL
-            if start_rank > 1:
-                current_url = f"{self.list_url}&start_rank={start_rank}"
-                self.driver.get(current_url)
-                time.sleep(2)
-            
-            # 获取当前页的项目
-            page_programs = self._extract_programs_from_page()
-            
-            if not page_programs:
-                print(f"[-] 第 {page} 页无更多项目，停止分页", flush=True)
-                break
-            
-            all_programs.extend(page_programs)
-            print(f"[-] 第 {page} 页: 获取 {len(page_programs)} 个项目 (累计: {len(all_programs)})", flush=True)
-            
-            # 检查是否还有下一页
-            if len(page_programs) < self.results_per_page:
-                break
-            
-            # 计算下一页的 start_rank
-            page += 1
-            start_rank += self.results_per_page
-            
-            # 防止无限循环
-            if page > 50:
-                print("[!] 达到最大页数限制 (50页)", flush=True)
-                break
+        # 提取所有项目
+        all_programs = self._extract_programs_from_page()
+        print(f"[-] 成功获取 {len(all_programs)} 个项目", flush=True)
         
         return all_programs
     
