@@ -5,6 +5,7 @@
 """
 
 import time
+import random
 import concurrent.futures
 import requests
 from typing import List, Dict, Tuple
@@ -15,7 +16,11 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException
 from bs4 import BeautifulSoup
 from spiders.base_spider import BaseSpider
-from config import HEADERS, TIMEOUT, MAX_WORKERS
+from config import HEADERS, TIMEOUT
+
+# 降低并发数以避免被限流
+UWA_MAX_WORKERS = 8
+UWA_MAX_RETRIES = 3
 
 
 class UWASpider(BaseSpider):
@@ -182,7 +187,7 @@ class UWASpider(BaseSpider):
         """
         results = []
         
-        with concurrent.futures.ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
+        with concurrent.futures.ThreadPoolExecutor(max_workers=UWA_MAX_WORKERS) as executor:
             # 提交所有任务
             future_to_program = {
                 executor.submit(self._process_program, name, url): (name, url)
@@ -208,6 +213,7 @@ class UWASpider(BaseSpider):
     def _process_program(self, name: str, url: str) -> Dict:
         """
         处理单个项目（运行在线程中）
+        包含重试机制以应对服务器限流
         
         参数:
             name: 项目名称
@@ -216,30 +222,54 @@ class UWASpider(BaseSpider):
         返回:
             Dict: 项目数据
         """
-        try:
-            # 使用 requests 获取详情页
-            response = requests.get(url, headers=HEADERS, timeout=TIMEOUT)
-            if response.status_code != 200:
+        for attempt in range(UWA_MAX_RETRIES):
+            try:
+                # 添加随机延迟避免触发限流
+                time.sleep(random.uniform(0.1, 0.5))
+                
+                # 使用 requests 获取详情页
+                response = requests.get(url, headers=HEADERS, timeout=TIMEOUT)
+                
+                if response.status_code == 200:
+                    soup = BeautifulSoup(response.text, 'html.parser')
+                    
+                    # 创建基础数据
+                    program_data = self.create_result_template(name, url)
+                    
+                    # 设置申请链接
+                    program_data["申请注册链接"] = self.apply_register_url
+                    program_data["申请登录链接"] = self.apply_login_url
+                    
+                    # 尝试提取额外信息
+                    extra_info = self._extract_extra_info(soup)
+                    if extra_info:
+                        program_data["学生案例"] = extra_info
+                    
+                    return program_data
+                
+                elif response.status_code in [429, 503]:  # Rate limited or service unavailable
+                    wait_time = (attempt + 1) * 2  # 指数退避
+                    time.sleep(wait_time)
+                    continue
+                else:
+                    # 其他错误，重试一次
+                    if attempt < UWA_MAX_RETRIES - 1:
+                        time.sleep(1)
+                        continue
+                    return None
+                    
+            except requests.exceptions.Timeout:
+                if attempt < UWA_MAX_RETRIES - 1:
+                    time.sleep(1)
+                    continue
                 return None
-            
-            soup = BeautifulSoup(response.text, 'html.parser')
-            
-            # 创建基础数据
-            program_data = self.create_result_template(name, url)
-            
-            # 设置申请链接
-            program_data["申请注册链接"] = self.apply_register_url
-            program_data["申请登录链接"] = self.apply_login_url
-            
-            # 尝试提取额外信息
-            extra_info = self._extract_extra_info(soup)
-            if extra_info:
-                program_data["学生案例"] = extra_info
-            
-            return program_data
-            
-        except Exception as e:
-            raise e
+            except Exception as e:
+                if attempt < UWA_MAX_RETRIES - 1:
+                    time.sleep(0.5)
+                    continue
+                raise e
+        
+        return None
     
     def _extract_extra_info(self, soup: BeautifulSoup) -> str:
         """
