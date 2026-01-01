@@ -19,9 +19,20 @@ _cached_driver_path = None
 _DEBUG_LOG_PATH = r"d:\Project\MySpiderProject\.cursor\debug.log"
 def _debug_log(hypothesis_id, location, message, data=None):
     import time
+    # Ensure directory exists
+    log_dir = os.path.dirname(_DEBUG_LOG_PATH)
+    if not os.path.exists(log_dir):
+        try:
+            os.makedirs(log_dir, exist_ok=True)
+        except Exception:
+            pass  # Fail silently if cannot create directory
+            
     entry = {"hypothesisId": hypothesis_id, "location": location, "message": message, "data": data or {}, "timestamp": int(time.time()*1000), "sessionId": "debug-session"}
-    with open(_DEBUG_LOG_PATH, "a", encoding="utf-8") as f:
-        f.write(json.dumps(entry, ensure_ascii=False) + "\n")
+    try:
+        with open(_DEBUG_LOG_PATH, "a", encoding="utf-8") as f:
+            f.write(json.dumps(entry, ensure_ascii=False) + "\n")
+    except Exception:
+        pass  # Fail silently if cannot write to log
 # #endregion
 
 

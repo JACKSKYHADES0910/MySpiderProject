@@ -129,6 +129,36 @@ UNIVERSITY_INFO = {
         "allowed_domain": "uwa.edu.au",
         "apply_register_url": "https://www.uwa.edu.au/study/login",
         "apply_login_url": "https://www.uwa.edu.au/study/login"
+    },
+    "qub": {
+        "code": "UK026",
+        "name": "Queen's University Belfast",
+        "name_cn": "贝尔法斯特女王大学",
+        "base_url": "https://www.qub.ac.uk",
+        "list_url": "https://www.qub.ac.uk/courses/?f.Study+Level%7CcourseLevel=Postgraduate+Taught&query=&num_ranks=100",
+        "allowed_domain": "qub.ac.uk",
+        "apply_register_url": "https://queensb2c.b2clogin.com/bdc53bdf-d9ac-45ee-b861-c6afba693dc0/B2C_1_qub_sign_up_and_sign_in/api/CombinedSigninAndSignup/unified?local=signup",
+        "apply_login_url": "https://queensb2c.b2clogin.com/bdc53bdf-d9ac-45ee-b861-c6afba693dc0/b2c_1_qub_sign_up_and_sign_in/oauth2/v2.0/authorize?client_id=b30b1288-fe04-4719-96ee-2860aaa1a088&redirect_uri=https%3A%2F%2Fmyportal.qub.ac.uk%2Fsignin-aad-b2c_1"
+    },
+    "aberdeen": {
+        "code": "UK030",
+        "name": "University of Aberdeen",
+        "name_cn": "阿伯丁大学",
+        "base_url": "https://www.abdn.ac.uk",
+        "list_url": "https://www.abdn.ac.uk/study/postgraduate-taught/degree-programmes/?limit=All",
+        "allowed_domain": "abdn.ac.uk",
+        "apply_register_url": "https://www.abdn.ac.uk/pgap/register.php",
+        "apply_login_url": "https://www.abdn.ac.uk/pgap/login.php"
+    },
+    "uea": {
+        "code": "UK034",
+        "name": "University of East Anglia",
+        "name_cn": "东英吉利大学",
+        "base_url": "https://www.uea.ac.uk",
+        "list_url": "https://www.uea.ac.uk/search/courses?primaryCategory%5B0%5D=Postgraduate",
+        "allowed_domain": "uea.ac.uk",
+        "apply_register_url": "https://uea.my.site.com/apply/TX_CommunitiesSelfReg?startURL=%2Fapply%2FTargetX_Base__Portal",
+        "apply_login_url": "https://uea.my.site.com/apply/TX_SiteLogin?startURL=%2Fapply%2FTargetX_Base__Portal"
     }
 }
 

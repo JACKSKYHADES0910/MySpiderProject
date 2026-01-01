@@ -34,6 +34,9 @@ from spiders.australia.anu_spider import ANUSpider
 from spiders.australia.uwa_spider import UWASpider
 from spiders.uk.imperial_spider import ImperialSpider
 from spiders.uk.manchester_spider import ManchesterSpider
+from spiders.uk.qub_spider import QUBSpider
+from spiders.uk.aberdeen_spider import AberdeenSpider
+from spiders.uk.uea_spider import UEASpider
 
 # 导入工具函数
 from utils.data_saver import save_excel, preview_data
@@ -56,6 +59,9 @@ SPIDER_REGISTRY = {
     "uwa": UWASpider,
     "imperial": ImperialSpider,
     "manchester": ManchesterSpider,
+    "qub": QUBSpider,
+    "aberdeen": AberdeenSpider,
+    "uea": UEASpider,
     # "hkbu": HKBUSpider,
     # 添加新爬虫时在此注册:
     # "oxford": OxfordSpider,
@@ -127,7 +133,7 @@ def print_region_universities(region_key: str):
             region_universities[key] = uni_info
         elif region_key == "australia" and key in ["anu", "uwa"]:
             region_universities[key] = uni_info
-        elif region_key == "uk" and key in ["imperial", "manchester"]:
+        elif region_key == "uk" and key in ["imperial", "manchester", "qub", "aberdeen", "uea"]:
             region_universities[key] = uni_info
         # 可扩展其他地区
     

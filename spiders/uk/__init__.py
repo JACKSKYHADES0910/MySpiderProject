@@ -5,6 +5,9 @@
 包含的大学:
     - 帝国理工学院 (Imperial College)
     - 曼彻斯特大学 (Manchester)
+    - 贝尔法斯特女王大学 (Queen's University Belfast)
+    - 阿伯丁大学 (University of Aberdeen)
+    - 东英吉利大学 (University of East Anglia)
     
 TODO: 待添加英国大学爬虫实现
 可添加的大学示例:
@@ -16,5 +19,10 @@ TODO: 待添加英国大学爬虫实现
 """
 
 from .manchester_spider import ManchesterSpider
+from .qub_spider import QUBSpider
+from .aberdeen_spider import AberdeenSpider
+from .uea_spider import UEASpider
 
-__all__ = ["ManchesterSpider"]
+__all__ = ["ManchesterSpider", "QUBSpider", "AberdeenSpider", "UEASpider"]
+
+

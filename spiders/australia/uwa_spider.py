@@ -60,7 +60,7 @@ class UWASpider(BaseSpider):
             return []
         
         # 2. 并发处理项目详情页
-        print(f"[-] 启动并发处理 (线程数: {MAX_WORKERS})...", flush=True)
+        print(f"[-] 启动并发处理 (线程数: {UWA_MAX_WORKERS})...", flush=True)
         self.results = self._process_programs_concurrently(all_programs)
         
         # 3. 打印摘要
