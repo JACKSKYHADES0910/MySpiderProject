@@ -79,21 +79,29 @@ def ensure_output_dir(output_dir: str = OUTPUT_DIR) -> str:
     return output_dir
 
 
-def generate_filename(university: str, extension: str = "xlsx") -> str:
+def generate_filename(university_code: str, university_name: str = "", extension: str = "xlsx") -> str:
     """
-    生成带时间戳的文件名
+    生成文件名（格式: 学校代码 学校英文名称.xlsx）
     
     参数:
-        university (str): 大学名称标识（如 "HKU"）
+        university_code (str): 大学代码（如 "UK038"）
+        university_name (str): 大学英文名称（如 "University of Strathclyde"）
         extension (str): 文件扩展名（默认 "xlsx"）
     
     返回:
         str: 完整的文件名
+    
+    示例:
+        >>> generate_filename("UK038", "University of Strathclyde")
+        "UK038 University of Strathclyde.xlsx"
     """
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    filename = FILENAME_TEMPLATE.format(university=university, timestamp=timestamp)
-    if not filename.endswith(f".{extension}"):
-        filename = filename.rsplit(".", 1)[0] + f".{extension}"
+    # 新格式: 学校代码 学校英文名称.xlsx
+    if university_name:
+        filename = f"{university_code} {university_name}.{extension}"
+    else:
+        # 兼容旧调用方式（如果没有提供名称，使用代码）
+        filename = f"{university_code}.{extension}"
+    
     return filename
 
 
@@ -129,6 +137,8 @@ def save_excel(
     data_list: List[Dict], 
     filename: Optional[str] = None,
     university: str = "University",
+    university_code: str = "",
+    university_name: str = "",
     output_dir: str = OUTPUT_DIR
 ) -> Optional[str]:
     """
@@ -137,7 +147,9 @@ def save_excel(
     参数:
         data_list (List[Dict]): 爬取到的数据列表
         filename (Optional[str]): 指定文件名（如不指定则自动生成）
-        university (str): 大学名称标识（用于生成文件名）
+        university (str): 大学名称标识（兼容旧版，用于生成文件名）
+        university_code (str): 大学代码（如 "UK038"）
+        university_name (str): 大学英文名称（如 "University of Strathclyde"）
         output_dir (str): 输出目录
     
     返回:
@@ -145,7 +157,7 @@ def save_excel(
     
     使用示例:
         >>> data = [{"学校名称": "HKU", "项目名称": "Computer Science"}]
-        >>> filepath = save_excel(data, university="HKU")
+        >>> filepath = save_excel(data, university_code="HK001", university_name="The University of Hong Kong")
         >>> print(f"文件已保存到: {filepath}")
     """
     if not data_list:
@@ -157,7 +169,14 @@ def save_excel(
     
     # 生成文件名
     if filename is None:
-        filename = generate_filename(university, "xlsx")
+        # 优先使用新格式（code + name）
+        if university_code and university_name:
+            filename = generate_filename(university_code, university_name, "xlsx")
+        elif university_code:
+            filename = generate_filename(university_code, "", "xlsx")
+        else:
+            # 兼容旧版调用
+            filename = generate_filename(university, "", "xlsx")
     
     # 构建完整路径
     filepath = os.path.join(output_dir, filename)
@@ -193,6 +212,8 @@ def save_csv(
     data_list: List[Dict], 
     filename: Optional[str] = None,
     university: str = "University",
+    university_code: str = "",
+    university_name: str = "",
     output_dir: str = OUTPUT_DIR
 ) -> Optional[str]:
     """
@@ -202,6 +223,8 @@ def save_csv(
         data_list (List[Dict]): 爬取到的数据列表
         filename (Optional[str]): 指定文件名（如不指定则自动生成）
         university (str): 大学名称标识（用于生成文件名）
+        university_code (str): 大学代码（如 "UK038"）
+        university_name (str): 大学英文名称（如 "University of Strathclyde"）
         output_dir (str): 输出目录
     
     返回:
@@ -216,7 +239,14 @@ def save_csv(
     
     # 生成文件名
     if filename is None:
-        filename = generate_filename(university, "csv")
+        # 优先使用新格式（code + name）
+        if university_code and university_name:
+            filename = generate_filename(university_code, university_name, "csv")
+        elif university_code:
+            filename = generate_filename(university_code, "", "csv")
+        else:
+            # 兼容旧版调用
+            filename = generate_filename(university, "", "csv")
     
     # 构建完整路径
     filepath = os.path.join(output_dir, filename)

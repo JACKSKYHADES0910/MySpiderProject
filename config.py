@@ -12,6 +12,7 @@ EXCEL_COLUMNS = [
     "学校代码",      # 学校唯一标识码
     "学校名称",      # 学校全称
     "项目名称",      # 硕士/博士项目名称
+    "学院/学习领域",  # 统一字段：按学院分类→Faculty，按学习领域分类→Study Area
     "项目官网链接",   # 项目详情页链接
     "申请注册链接",   # 新用户注册入口
     "申请登录链接",   # 已有账户登录入口
@@ -159,6 +160,66 @@ UNIVERSITY_INFO = {
         "allowed_domain": "uea.ac.uk",
         "apply_register_url": "https://uea.my.site.com/apply/TX_CommunitiesSelfReg?startURL=%2Fapply%2FTargetX_Base__Portal",
         "apply_login_url": "https://uea.my.site.com/apply/TX_SiteLogin?startURL=%2Fapply%2FTargetX_Base__Portal"
+    },
+    "strathclyde": {
+        "code": "UK038",
+        "name": "University of Strathclyde",
+        "name_cn": "斯特拉斯克莱德大学",
+        "base_url": "https://www.strath.ac.uk",
+        "list_url": "https://www.strath.ac.uk/courses/postgraduatetaught/?level=Postgraduate+taught",
+        "allowed_domain": "strath.ac.uk",
+        "apply_register_url": "https://isc.strath.ac.uk/apply-now/apply-form#/",
+        "apply_login_url": "https://isc.strath.ac.uk/apply-now/apply-form#/"
+    },
+    "brunel": {
+        "code": "UK043",
+        "name": "Brunel University London",
+        "name_cn": "伦敦布鲁内尔大学",
+        "base_url": "https://www.brunel.ac.uk",
+        "list_url": "https://www.brunel.ac.uk/study/courses?courseLevel=0%2F2%2F24%2F28%2F44&pageSize=10000",
+        "allowed_domain": "brunel.ac.uk",
+        "apply_register_url": "https://evision.brunel.ac.uk/urd/sits.urd/run/SIW_IPP_LGN",
+        "apply_login_url": "https://evision.brunel.ac.uk/urd/sits.urd/run/SIW_IPP_LGN"
+    },
+    "mmu": {
+        "code": "UK055",
+        "name": "Manchester Metropolitan University",
+        "name_cn": "曼彻斯特城市大学",
+        "base_url": "https://www.mmu.ac.uk",
+        "list_url": "https://www.mmu.ac.uk/study/postgraduate/courses",
+        "allowed_domain": "mmu.ac.uk",
+        "apply_register_url": "https://www.mmu.ac.uk/study/postgraduate/register-your-interest#signup",
+        "apply_login_url": "https://sm-portal-mmu.thesiscloud.com/application-portal-step-1/"
+    },
+    "royalholloway": {
+        "code": "UK059",
+        "name": "Royal Holloway University of London",
+        "name_cn": "伦敦大学皇家霍洛威学院",
+        "base_url": "https://www.royalholloway.ac.uk",
+        "list_url": "https://www.royalholloway.ac.uk/studying-here/postgraduate-courses/",
+        "allowed_domain": "royalholloway.ac.uk",
+        "apply_register_url": "https://royalhollowayacuk.elluciancrmrecruit.com/Apply/Account/Create",
+        "apply_login_url": "https://royalhollowayacuk.elluciancrmrecruit.com/Apply/Account/Login"
+    },
+    "ulster": {
+        "code": "UK067",
+        "name": "Ulster University",
+        "name_cn": "阿尔斯特大学",
+        "base_url": "https://www.ulster.ac.uk",
+        "list_url": "https://www.ulster.ac.uk/courses?f.Level_u|Y=Postgraduate&query=&start_rank=1",
+        "allowed_domain": "ulster.ac.uk",
+        "apply_register_url": "https://srssb.ulster.ac.uk/PROD/bwskalog.p_disploginnew?in_id=&cpbl=&newid=",
+        "apply_login_url": "https://srssb.ulster.ac.uk/PROD/bwskalog.P_DispLoginNon"
+    },
+    "deakin": {
+        "code": "AUS011",
+        "name": "Deakin University",
+        "name_cn": "迪肯大学",
+        "base_url": "https://www.deakin.edu.au",
+        "list_url": "https://www.deakin.edu.au/study/find-a-course/postgraduate-courses",
+        "allowed_domain": "deakin.edu.au",
+        "apply_register_url": "https://student-deakin.studylink.com/index.cfm?event=registration.form",
+        "apply_login_url": "https://student-deakin.studylink.com/index.cfm?event=security.showLogin&msg=eventsecured&fr=sp&en=default"
     }
 }
 

@@ -4,6 +4,7 @@
 """
 from .anu_spider import ANUSpider
 from .uwa_spider import UWASpider
+from .deakin_spider import DeakinSpider
 
-__all__ = ['ANUSpider', 'UWASpider']
+__all__ = ['ANUSpider', 'UWASpider', 'DeakinSpider']
 

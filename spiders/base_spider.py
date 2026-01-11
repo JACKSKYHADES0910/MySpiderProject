@@ -135,6 +135,7 @@ class BaseSpider(ABC):
             "学校代码": self.school_code,
             "学校名称": self.school_name,
             "项目名称": program_name,
+            "学院/学习领域": "N/A",  # 统一字段：Faculty或Study Area
             "项目官网链接": program_link,
             "申请注册链接": "N/A",
             "申请登录链接": "N/A",

@@ -32,11 +32,17 @@ from spiders.hongkong.cityu_spider import CityUSpider
 from spiders.hongkong.polyu_spider import PolyUSpider
 from spiders.australia.anu_spider import ANUSpider
 from spiders.australia.uwa_spider import UWASpider
+from spiders.australia.deakin_spider import DeakinSpider
 from spiders.uk.imperial_spider import ImperialSpider
 from spiders.uk.manchester_spider import ManchesterSpider
 from spiders.uk.qub_spider import QUBSpider
 from spiders.uk.aberdeen_spider import AberdeenSpider
 from spiders.uk.uea_spider import UEASpider
+from spiders.uk.strathclyde_spider import StrathclydeSpider
+from spiders.uk.brunel_spider import BrunelSpider
+from spiders.uk.mmu_spider import MMUSpider
+from spiders.uk.royalholloway_spider import RoyalHollowaySpider
+from spiders.uk.ulster_spider import UlsterSpider
 
 # 导入工具函数
 from utils.data_saver import save_excel, preview_data
@@ -62,6 +68,12 @@ SPIDER_REGISTRY = {
     "qub": QUBSpider,
     "aberdeen": AberdeenSpider,
     "uea": UEASpider,
+    "strathclyde": StrathclydeSpider,
+    "brunel": BrunelSpider,
+    "mmu": MMUSpider,
+    "royalholloway": RoyalHollowaySpider,
+    "ulster": UlsterSpider,
+    "deakin": DeakinSpider,
     # "hkbu": HKBUSpider,
     # 添加新爬虫时在此注册:
     # "oxford": OxfordSpider,
@@ -131,9 +143,9 @@ def print_region_universities(region_key: str):
         # 暂时使用简单判断：hku/cuhk/cityu 属于 hongkong
         if region_key == "hongkong" and key in ["hku", "cuhk", "hkbu", "cityu", "polyu"]:
             region_universities[key] = uni_info
-        elif region_key == "australia" and key in ["anu", "uwa"]:
+        elif region_key == "australia" and key in ["anu", "uwa", "deakin"]:
             region_universities[key] = uni_info
-        elif region_key == "uk" and key in ["imperial", "manchester", "qub", "aberdeen", "uea"]:
+        elif region_key == "uk" and key in ["imperial", "manchester", "qub", "aberdeen", "uea", "strathclyde", "brunel", "mmu", "royalholloway", "ulster"]:
             region_universities[key] = uni_info
         # 可扩展其他地区
     
@@ -257,7 +269,11 @@ def run_spider(university_key: str, debug: bool = False):
             # 询问是否保存
             save_choice = input("\n💾 是否保存到 Excel? (Y/n): ").strip().lower()
             if save_choice != 'n':
-                filepath = save_excel(results, university=uni_info['code'])
+                filepath = save_excel(
+                    results, 
+                    university_code=uni_info['code'],
+                    university_name=uni_info['name']
+                )
                 if filepath:
                     print("\n✨ 任务完成！")
         else:

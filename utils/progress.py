@@ -227,8 +227,8 @@ class CrawlerProgress:
         """
         使用简单文本显示进度（降级方案）
         """
-        print(f"\n🔥 [{phase_name}] 启动 {self.max_workers} 个并发窗口进行后台抓取...")
-        print(f"按 Ctrl+C 可随时中断")
+        print(f"\n🔥 [{phase_name}] 启动 {self.max_workers} 个并发窗口进行后台抓取...", flush=True)
+        print(f"按 Ctrl+C 可随时中断", flush=True)
         time.sleep(1)
         
         # 设置中断处理
@@ -241,7 +241,7 @@ class CrawlerProgress:
                     for item in items
                 }
                 
-                print(f"⏳ 任务队列已建立，正在全力运行中...")
+                print(f"⏳ 任务队列已建立，正在全力运行中...", flush=True)
                 
                 for future in as_completed(future_to_item):
                     if self.is_interrupted:
@@ -263,7 +263,7 @@ class CrawlerProgress:
                         remaining = (total - self.completed_count) * avg_time / self.max_workers
                         
                         name_preview = data['项目名称'][:20] + "..." if len(data.get('项目名称', '')) > 20 else data.get('项目名称', '')
-                        print(f"[{self.completed_count}/{total}] {percent:.1f}% ✅ {name_preview} | ⏱️ {duration:.2f}s | 预计剩余: {remaining:.0f}s")
+                        print(f"[{self.completed_count}/{total}] {percent:.1f}% ✅ {name_preview} | ⏱️ {duration:.2f}s | 预计剩余: {remaining:.0f}s", flush=True)
                         
                     except Exception as exc:
                         self.completed_count += 1
@@ -273,7 +273,7 @@ class CrawlerProgress:
                             "link": item.get("link", ""),
                             "error": str(exc)
                         })
-                        print(f"❌ 任务异常: {item.get('name', '')[:20]} - {exc}")
+                        print(f"❌ 任务异常: {item.get('name', '')[:20]} - {exc}", flush=True)
         
         finally:
             signal.signal(signal.SIGINT, original_handler)
@@ -291,7 +291,7 @@ class CrawlerProgress:
         if RICH_AVAILABLE and console:
             console.print("\n[bold yellow]⚠️ 检测到中断信号，正在优雅停止...[/bold yellow]")
         else:
-            print("\n⚠️ 检测到中断信号，正在优雅停止...")
+            print("\n⚠️ 检测到中断信号，正在优雅停止...", flush=True)
     
     def _print_summary(self, total: int) -> None:
         """
@@ -343,23 +343,23 @@ class CrawlerProgress:
         """
         status = "⚠️ 任务被中断" if self.is_interrupted else "✅ 任务完成"
         
-        print("\n" + "=" * 50)
-        print(f"📊 抓取统计 - {status}")
-        print("=" * 50)
-        print(f"  总任务: {total} | 已完成: {self.completed_count}")
-        print(f"  成功: {self.success_count} | 失败: {self.fail_count}")
+        print("\n" + "=" * 50, flush=True)
+        print(f"📊 抓取统计 - {status}", flush=True)
+        print("=" * 50, flush=True)
+        print(f"  总任务: {total} | 已完成: {self.completed_count}", flush=True)
+        print(f"  成功: {self.success_count} | 失败: {self.fail_count}", flush=True)
         
         if self.completed_count > 0:
-            print(f"  成功率: {(self.success_count/self.completed_count)*100:.1f}%")
+            print(f"  成功率: {(self.success_count/self.completed_count)*100:.1f}%", flush=True)
         
         if self.durations:
             avg = sum(self.durations) / len(self.durations)
-            print(f"  平均耗时: {avg:.2f}s | 最快: {min(self.durations):.2f}s | 最慢: {max(self.durations):.2f}s")
+            print(f"  平均耗时: {avg:.2f}s | 最快: {min(self.durations):.2f}s | 最慢: {max(self.durations):.2f}s", flush=True)
         
         if self.fail_count > 0:
-            print(f"\n⚠️ 共有 {self.fail_count} 个项目抓取失败")
+            print(f"\n⚠️ 共有 {self.fail_count} 个项目抓取失败", flush=True)
         
-        print("=" * 50)
+        print("=" * 50, flush=True)
     
     def get_failed_items(self) -> List[Dict]:
         """
@@ -405,11 +405,11 @@ def print_phase_start(phase_name: str, description: str, workers: int = None, to
         ))
         console.print()
     else:
-        print(f"\n🚀 [{phase_name}] {description}")
+        print(f"\n🚀 [{phase_name}] {description}", flush=True)
         if workers:
-            print(f"   并发线程数: {workers}")
+            print(f"   并发线程数: {workers}", flush=True)
         if total:
-            print(f"   总任务数: {total}")
+            print(f"   总任务数: {total}", flush=True)
 
 
 def print_phase_complete(phase_name: str, count: int) -> None:
@@ -423,5 +423,5 @@ def print_phase_complete(phase_name: str, count: int) -> None:
     if RICH_AVAILABLE and console:
         console.print(f"[bold green]✅ [{phase_name}] 完成！共锁定 {count} 个项目[/bold green]")
     else:
-        print(f"✅ [{phase_name}] 完成！共锁定 {count} 个项目")
+        print(f"✅ [{phase_name}] 完成！共锁定 {count} 个项目", flush=True)
 
